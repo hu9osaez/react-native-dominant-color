@@ -1,0 +1,16 @@
+
+{
+  "name": "react-native-dominant-color",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [
+    "react-native",
+    "dominant-color"
+  ],
+  "author": "Hugo Sáez",
+  "license": "",
+  "peerDependencies": {
+    "react-native": "^0.41.2"
+  }
+}
