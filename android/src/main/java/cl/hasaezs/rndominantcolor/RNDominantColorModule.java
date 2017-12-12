@@ -8,22 +8,47 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.graphics.Palette;
-import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.*;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class RNDominantColorModule extends ReactContextBaseJavaModule {
 
+    private final int defaultColor;
+
     public RNDominantColorModule(ReactApplicationContext reactContext) {
         super(reactContext);
+
+        this.defaultColor = Color.LTGRAY;
     }
 
     @Override
     public String getName() {
         return "RNDominantColor";
+    }
+
+    private String intColorToHex(int color) {
+        return String.format("#%06X", (0xFFFFFF & color));
+    }
+
+    private WritableMap mapColors(Palette palette) {
+        if (palette == null) {
+            return null;
+        }
+
+        WritableMap map = Arguments.createMap();
+
+        String dominantColor = intColorToHex(palette.getDominantColor(defaultColor));
+        String vibrantColor = intColorToHex(palette.getVibrantColor(defaultColor));
+        String darkVibrantColor = intColorToHex(palette.getDarkVibrantColor(defaultColor));
+        String lightVibrantColor = intColorToHex(palette.getLightVibrantColor(defaultColor));
+
+        map.putString("dominantColor", dominantColor);
+        map.putString("vibrantColor", vibrantColor);
+        map.putString("darkVibrantColor", darkVibrantColor);
+        map.putString("lightVibrantColor", lightVibrantColor);
+
+        return map;
     }
 
     private void loadImage(final String url, final Callback callback) {
@@ -33,10 +58,9 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
         final Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                int color = Palette.from(bitmap).generate().getDominantColor(Color.LTGRAY);
-                String hexColor = String.format("#%06X", (0xFFFFFF & color));
+                WritableMap colorMap = mapColors(Palette.from(bitmap).generate());
 
-                callback.invoke(false, hexColor);
+                callback.invoke(false, colorMap);
             }
 
             @Override
