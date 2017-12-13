@@ -98,6 +98,7 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
                 Picasso
                         .with(activity.getApplicationContext())
                         .load(url)
+                        .resize(200, 200)
                         .into(target);
             }
         });
