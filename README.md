@@ -1,12 +1,12 @@
 
 # react-native-dominant-color
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+Extract the dominant colors of an image (Just for Android).
 
 ## Getting started
-
 `$ npm install react-native-dominant-color --save`
 
 ### Mostly automatic installation
-
 `$ react-native link react-native-dominant-color`
 
 ### Manual installation
@@ -30,9 +30,37 @@
 
 ## Usage
 ```javascript
-import RNDominantColor from 'react-native-dominant-color';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { getDominantColor } from 'react-native-dominant-color';
 
-// TODO: What to do with the module?
-RNDominantColor;
+const imageUrl = 'https://source.unsplash.com/random/800x600';
+
+class Example extends Component {
+    constructor() {
+        super();
+        this.state = {
+            color: '#ffffff',
+        };
+    }
+    
+    componentDidMount() {
+        let self = this;
+        getDominantColor(imageUrl, (err, colors) => {
+            if(!err) {
+                self.setState({ color: colors.dominantColor });
+            }
+        });
+    }
+    
+    render() {
+        return (
+            <View style={{ flex: 1, backgroundColor: this.state.color, alignItems: 'stretch', justifyContent: 'center' }}>
+                
+            </View>
+        );
+    }
+}
+
 ```
   

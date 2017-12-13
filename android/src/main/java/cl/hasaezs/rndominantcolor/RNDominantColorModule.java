@@ -27,22 +27,41 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
         return "RNDominantColor";
     }
 
+    public int calculateAvgColor(Bitmap bitmap, int pixelSpacing) {
+        int R = 0; int G = 0; int B = 0;
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        int n = 0;
+        int[] pixels = new int[width * height];
+
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        for (int i = 0; i < pixels.length; i += pixelSpacing) {
+            int color = pixels[i];
+            R += Color.red(color);
+            G += Color.green(color);
+            B += Color.blue(color);
+            n++;
+        }
+
+        return Color.rgb(R / n, G / n, B / n);
+    }
+
     private String intColorToHex(int color) {
         return String.format("#%06X", (0xFFFFFF & color));
     }
 
-    private WritableMap mapColors(Palette palette) {
-        if (palette == null) {
-            return null;
-        }
-
+    private WritableMap mapColors(Bitmap bm) {
+        Palette palette = Palette.from(bm).generate();
         WritableMap map = Arguments.createMap();
 
+        String averageColor = intColorToHex(calculateAvgColor(bm, 5));
         String dominantColor = intColorToHex(palette.getDominantColor(defaultColor));
         String vibrantColor = intColorToHex(palette.getVibrantColor(defaultColor));
         String darkVibrantColor = intColorToHex(palette.getDarkVibrantColor(defaultColor));
         String lightVibrantColor = intColorToHex(palette.getLightVibrantColor(defaultColor));
 
+        map.putString("averageColor", averageColor);
         map.putString("dominantColor", dominantColor);
         map.putString("vibrantColor", vibrantColor);
         map.putString("darkVibrantColor", darkVibrantColor);
@@ -58,7 +77,7 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
         final Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                WritableMap colorMap = mapColors(Palette.from(bitmap).generate());
+                WritableMap colorMap = mapColors(bitmap);
 
                 callback.invoke(false, colorMap);
             }
