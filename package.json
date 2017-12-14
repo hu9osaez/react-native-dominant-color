@@ -2,14 +2,14 @@
 {
   "name": "react-native-dominant-color",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple library to extract the dominant color from an image in React Native",
   "main": "index.js",
   "keywords": [
     "react-native",
     "dominant-color"
   ],
   "author": "Hugo Sáez",
-  "license": "",
+  "license": "MIT",
   "peerDependencies": {
     "react-native": "^0.41.2"
   }
