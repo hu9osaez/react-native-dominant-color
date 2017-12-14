@@ -70,7 +70,7 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
         return map;
     }
 
-    private void loadImage(final String url, final Callback callback) {
+    private void loadImageFromUrl(final String url, final Callback callback) {
         final Activity activity = getCurrentActivity();
         Handler uiHandler = new Handler(Looper.getMainLooper());
 
@@ -105,7 +105,7 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getDominantColor(String url, final Callback callback) {
-        this.loadImage(url, callback);
+    public void colorsFromUrl(String url, final Callback callback) {
+        this.loadImageFromUrl(url, callback);
     }
 }
