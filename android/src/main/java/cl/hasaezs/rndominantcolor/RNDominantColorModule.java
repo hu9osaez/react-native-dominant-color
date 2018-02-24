@@ -1,4 +1,3 @@
-
 package cl.hasaezs.rndominantcolor;
 
 import android.app.Activity;
@@ -27,7 +26,7 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
         return "RNDominantColor";
     }
 
-    public int calculateAvgColor(Bitmap bitmap, int pixelSpacing) {
+    private int calculateAvgColor(Bitmap bitmap, int pixelSpacing) {
         int R = 0; int G = 0; int B = 0;
         int height = bitmap.getHeight();
         int width = bitmap.getWidth();
@@ -70,7 +69,7 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
         return map;
     }
 
-    private void loadImageFromUrl(final String url, final Callback callback) {
+    private void loadImageFromUrl(final String url, final Promise promise) {
         final Activity activity = getCurrentActivity();
         Handler uiHandler = new Handler(Looper.getMainLooper());
 
@@ -79,12 +78,12 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 WritableMap colorMap = mapColors(bitmap);
 
-                callback.invoke(false, colorMap);
+                promise.resolve(colorMap);
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-                callback.invoke(true, null);
+                promise.reject("", errorDrawable.toString());
             }
 
             @Override
@@ -105,7 +104,7 @@ public class RNDominantColorModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void colorsFromUrl(String url, final Callback callback) {
-        this.loadImageFromUrl(url, callback);
+    public void colorsFromUrl(String url, final Promise promise) {
+        this.loadImageFromUrl(url, promise);
     }
 }
